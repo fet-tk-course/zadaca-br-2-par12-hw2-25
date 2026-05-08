@@ -28,7 +28,7 @@ def get_director(director_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Režiser nije pronađen")
     return director
 
-# Kreiranje novog reditelja
+# Kreiranje novog režisera
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_director(director: DirectorCreate, session: Session = Depends(get_session)):
     new_director = Director.model_validate(director)
@@ -36,3 +36,20 @@ def create_director(director: DirectorCreate, session: Session = Depends(get_ses
     session.commit()
     session.refresh(new_director)
     return new_director
+
+
+# Potpuna zamjena režisera
+@router.put("/{director_id}")
+def update_director(director_id: int, director_update: DirectorCreate, session: Session = Depends(get_session)):
+    existing = session.get(Director, director_id)
+    if not existing:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Režiser nije pronađen")
+    
+    director_data = director_update.model_dump()
+    for key, value in director_data.items():
+        setattr(existing, key, value)
+
+    session.add(existing)
+    session.commit()
+    session.refresh(existing)
+    return existing
