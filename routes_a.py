@@ -53,3 +53,19 @@ def update_director(director_id: int, director_update: DirectorCreate, session: 
     session.commit()
     session.refresh(existing)
     return existing
+
+# Djelimično ažuriranje režisera
+@router.patch("/{director_id}")
+def patch_director(director_id: int, director_update: DirectorUpdate, session:Session = Depends(get_session)):
+    existing = session.get(Director, director_id)
+    if not existing:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Režiser nije pronađen")
+    
+    update_data = director_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(existing, key, value)
+
+    session.add(existing)
+    session.commit()
+    session.refresh(existing)
+    return existing
