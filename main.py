@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from database import create_db_and_tables
-
+from routes_a import router as director_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -16,6 +16,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+app.include_router(director_router)
 
 @app.get("/")
 def read_root():
