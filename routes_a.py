@@ -66,6 +66,17 @@ def patch_director(director_id: int, director_update: DirectorUpdate, session:Se
         setattr(existing, key, value)
 
     session.add(existing)
+
     session.commit()
     session.refresh(existing)
     return existing
+
+# Brisanje režisera
+@router.delete("/{director_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_director(director_id: int, session: Session = Depends(get_session)):
+    existing = session.get(Director, director_id)
+    if not existing:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Režiser nije pronađen")
+    
+    session.delete(existing)
+    session.commit()
