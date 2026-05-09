@@ -22,7 +22,7 @@ class MovieCreate(SQLModel):
     rating: float
     is_oscar_winner: bool
     description: Optional[str] = None
-    kolegica_id: Optional[int] = None
+    director_id: Optional[int] = None
 
 class MovieUpdate(SQLModel):
     title: Optional[str] = None
@@ -30,5 +30,5 @@ class MovieUpdate(SQLModel):
     rating: Optional[float] = None
     is_oscar_winner: Optional[bool] = None
     description: Optional[str] = None
-    kolegica_id: Optional[int] = None
+    director_id: Optional[int] = None
     
