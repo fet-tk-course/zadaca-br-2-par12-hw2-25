@@ -68,7 +68,20 @@ curl -X POST "http://localhost:8000/resursi_a" \
   -d '{"polje1": "vrijednost", "polje2": 123}'
 ```
 
-### Resurs B: `/resursi_b`
+### Resurs B: `/movies`
+
+| Metoda | Ruta | Opis |
+|--------|------|------|
+| GET | `/movies` | Vraća listu svih filmova. Podržava filtriranje po godini |
+| GET | `/movies/{id}` |Vraća detaljne informacije o  filmu na osnovu njegovog ID-a |
+| POST | `/resursi_a` | Kreira novi zapis o filmu |
+| PUT | `/movies/{id}` | Potpuna zamjena postojeceg filma |
+| PATCH | `/movies/{id}` | Djelimično ažuriranje filma |
+| DELETE | `/movies/{id}` | Brisanje filma |
+
+curl -X POST "http://localhost:8000/movies" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Inception", "year": 2010, "rating": 9, "is_oscar_winner": true, "description": "Film o snovima unutar snova."}'
 
 [Analogno kao za Resurs A]
 
