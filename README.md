@@ -8,8 +8,10 @@ Domena: Digitalna baza podataka o filmovima i kinematografiji.
 Svrha: Aplikacija služi kao centralni sistem za evidenciju filmova. Omogućava korisnicima da pretražuju filmske naslove, prate njihove ocjene na platformama poput IMDB-a, bilježe godine izdanja i prate uspjehe na prestižnim nagradama (Oskari). Cilj je pružiti brz i efikasan način za upravljanje podacima o filmovima kroz REST API operacije.
 ## Tim 12
 
-- **Student A**: [Ime Prezime] - resurs: `/resursi_a`
+
+- **Student A**: Fatima Salić - resurs: `/directors`
 - **Student B**: Elma Đonlić - resurs: `/movies`
+
 
 ## Instalacija i pokretanje
 
@@ -49,23 +51,23 @@ uvicorn main:app --reload
 
 ## API Endpointi
 
-### Resurs A: `/resursi_a`
+### Resurs A: `/directors`
 
 | Metoda | Ruta | Opis |
 |--------|------|------|
-| GET | `/resursi_a` | Lista svih resursa (sa query filterom) |
-| GET | `/resursi_a/{id}` | Dohvatanje resursa po ID-u |
-| POST | `/resursi_a` | Kreiranje novog resursa |
-| PUT | `/resursi_a/{id}` | Potpuna zamjena resursa |
-| PATCH | `/resursi_a/{id}` | Djelimično ažuriranje resursa |
-| DELETE | `/resursi_a/{id}` | Brisanje resursa |
+| GET | `/directors` | Lista svih režisera (filter po nationality) |
+| GET | `/directors/{id}` | Dohvatanje režisera po ID-u |
+| POST | `/directors` | Kreiranje novog režisera |
+| PUT | `/directors/{id}` | Potpuna zamjena režisera |
+| PATCH | `/directors/{id}` | Djelimično ažuriranje režisera |
+| DELETE | `/directors/{id}` | Brisanje režisera |
 
 **Primjer zahtjeva:**
 ```bash
 # Kreiranje novog resursa
-curl -X POST "http://localhost:8000/resursi_a" \
+curl -X POST "http://localhost:8000/directors" \
   -H "Content-Type: application/json" \
-  -d '{"polje1": "vrijednost", "polje2": 123}'
+  -d '{"name": "Christopher Nolan", "nationality": "British", "birth_year": 1970, "awards": 5, "active": true, "rating": 9.0}'
 ```
 
 ### Resurs B: `/movies`
@@ -91,9 +93,9 @@ curl -X POST "http://localhost:8000/movies" \
 **Model:** [GPT-4, Copilot model, ...]
 
 **Primjer 1:**
-- **Prompt:** [Npr. "Kreiraj SQLModel klasu za entitet Knjiga sa poljima naslov, autor, godina, isbn"]
-- **Kako je pomoglo:** [Opis]
-- **Prilagodbe:** [Da li ste morali prilagoditi generisani kod]
+- **Prompt:** Imam SQLModel klasu Director sa poljima id, name i nationality. Dodaj još polja da ih ukupno bude minimum 6 različitih tipova (str, int, float, bool, Optional). Polja trebaju biti logički smislena za reditelja filmova. Ažuriraj i DirectorCreate i DirectorUpdate sheme sa istim poljima.
+- **Kako je pomoglo:** Claude je generisao dodatna polja (birth_year, awards, rating, active) sa odgovarajućim tipovima i automatski ažurirao sve tri klase (Director, DirectorCreate, DirectorUpdate).
+- **Prilagodbe:** Nisu bile potrebne značajne prilagodbe, kod je bio direktno upotrebljiv.
 
 **Primjer 2:**
 - **Prompt:** [Npr. "Implementiraj PATCH endpoint sa exclude_unset=True"]
