@@ -3,12 +3,13 @@
 
 ## O projektu
 
-[Ovdje ukratko opišite domenu vaše aplikacije i njenu svrhu]
+Domena: Digitalna baza podataka o filmovima i kinematografiji.
 
-## Tim
+Svrha: Aplikacija služi kao centralni sistem za evidenciju filmova. Omogućava korisnicima da pretražuju filmske naslove, prate njihove ocjene na platformama poput IMDB-a, bilježe godine izdanja i prate uspjehe na prestižnim nagradama (Oskari). Cilj je pružiti brz i efikasan način za upravljanje podacima o filmovima kroz REST API operacije.
+## Tim 12
 
 - **Student A**: [Ime Prezime] - resurs: `/resursi_a`
-- **Student B**: [Ime Prezime] - resurs: `/resursi_b`
+- **Student B**: Elma Đonlić - resurs: `/movies`
 
 ## Instalacija i pokretanje
 
