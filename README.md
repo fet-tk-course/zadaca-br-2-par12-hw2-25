@@ -3,12 +3,13 @@
 
 ## O projektu
 
-[Ovdje ukratko opišite domenu vaše aplikacije i njenu svrhu]
+Domena: Digitalna baza podataka o filmovima i kinematografiji.
 
-## Tim
+Svrha: Aplikacija služi kao centralni sistem za evidenciju filmova. Omogućava korisnicima da pretražuju filmske naslove, prate njihove ocjene na platformama poput IMDB-a, bilježe godine izdanja i prate uspjehe na prestižnim nagradama (Oskari). Cilj je pružiti brz i efikasan način za upravljanje podacima o filmovima kroz REST API operacije.
+## Tim 12
 
 - **Student A**: [Ime Prezime] - resurs: `/resursi_a`
-- **Student B**: [Ime Prezime] - resurs: `/resursi_b`
+- **Student B**: Elma Đonlić - resurs: `/movies`
 
 ## Instalacija i pokretanje
 
@@ -67,7 +68,20 @@ curl -X POST "http://localhost:8000/resursi_a" \
   -d '{"polje1": "vrijednost", "polje2": 123}'
 ```
 
-### Resurs B: `/resursi_b`
+### Resurs B: `/movies`
+
+| Metoda | Ruta | Opis |
+|--------|------|------|
+| GET | `/movies` | Vraća listu svih filmova. Podržava filtriranje po godini |
+| GET | `/movies/{id}` |Vraća detaljne informacije o  filmu na osnovu njegovog ID-a |
+| POST | `/resursi_a` | Kreira novi zapis o filmu |
+| PUT | `/movies/{id}` | Potpuna zamjena postojeceg filma |
+| PATCH | `/movies/{id}` | Djelimično ažuriranje filma |
+| DELETE | `/movies/{id}` | Brisanje filma |
+
+curl -X POST "http://localhost:8000/movies" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Inception", "year": 2010, "rating": 9, "is_oscar_winner": true, "description": "Film o snovima unutar snova."}'
 
 [Analogno kao za Resurs A]
 
