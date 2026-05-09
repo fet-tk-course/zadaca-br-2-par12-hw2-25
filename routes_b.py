@@ -1,6 +1,82 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
+from typing import List, Optional
 
+from models_b import Movie, MovieCreate, MovieUpdate
 from database import get_session
 
-router = APIRouter(prefix="/resursi_b", tags=["Resurs B"])
+router = APIRouter(prefix="/movies", tags=["Movies - Student_B"])
+
+# GET /movies - lista svih filmova sa query filterom po godini
+@router.get("/", response_model=List[Movie])
+def read_movies(year: Optional[int] = None, session: Session = Depends(get_session)):
+    query = select(Movie)
+    if year is not None:
+        query = query.where(Movie.year == year)
+    movies = session.exec(query).all()
+    return movies
+
+
+# GET /movies/{id} - za dohvatanje filma preko njegovog ID-a ako film ne postoji vraca 404
+@router.get("/{id}", response_model=Movie)
+def read_movie(id: int, session: Session = Depends(get_session)):
+    movie = session.get(Movie, id)
+    if not movie:
+        raise HTTPException(status_code=404, detail="Film nije pronađen")
+    return movie
+
+#POST /movies - za kreiranje novog filma (Status 201)
+@router.post("/", response_model=Movie, status_code=201)
+def create_movie(movie: MovieCreate, session: Session = Depends(get_session)):
+    new_movie = Movie.from_orm(movie)
+    session.add(new_movie)
+    session.commit()
+    session.refresh(new_movie)
+    return new_movie
+
+
+# PUT /movies/{id} - potpuna zamjena filma (ako film ne postoji vraca 404)
+@router.put("/{id}", response_model=Movie)
+def update_movie(id: int, movie_data: MovieCreate, session: Session = Depends(get_session)):
+    db_movie = session.get(Movie, id)
+    if not db_movie:
+        raise HTTPException(status_code=404, detail="Film nije pronađen")
+    
+    for key, value in movie_data.dict().items():
+        setattr(db_movie, key, value)
+    
+    session.add(db_movie)
+    session.commit()
+    session.refresh(db_movie)
+    return db_movie
+
+
+# PATCH /movies/{id} - djelimicno azuriranje (exclude_unset=True)
+@router.patch("/{id}", response_model=Movie)
+def patch_movie(id: int, movie_update: MovieUpdate, session: Session = Depends(get_session)):
+    movie = session.get(Movie, id)
+    if not movie:
+        raise HTTPException(status_code=404, detail="Film nije pronađen")
+    
+    update_data = movie_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(movie, key, value)
+    
+    session.add(movie)
+    session.commit()
+    session.refresh(movie)
+    return movie
+
+
+# DELETE /movies/{id} - za brisanje filma iz baze(Status 204)
+@router.delete("/{id}", status_code=204)
+def delete_movie(id: int, session: Session = Depends(get_session)):
+    movie = session.get(Movie, id)
+    if not movie:
+        raise HTTPException(status_code=404, detail="Film nije pronađen")
+    
+    session.delete(movie)
+    session.commit()
+    return None
+
+
