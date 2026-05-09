@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
-from models_a import KolegicaModel
+from models_a import Director
 
 # TODO: Student B - Definiši svoj SQLModel entitet ovdje
 # 
@@ -13,8 +13,10 @@ class Movie(SQLModel, table=True):
     rating: float
     is_oscar_winner: bool
     description: Optional[str] = Field(default=None, max_length=500)
-    kolegica_id: Optional[int] = Field(default=None, foreign_key="kolegicamodel.id")
-    kolegica: Optional[KolegicaModel] = Relationship()
+
+    director_id: Optional[int] = Field(default=None, foreign_key="director.id")
+    
+    director: Optional[Director] = Relationship()
     
 class MovieCreate(SQLModel):
     title: str
@@ -22,7 +24,7 @@ class MovieCreate(SQLModel):
     rating: float
     is_oscar_winner: bool
     description: Optional[str] = None
-    kolegica_id: Optional[int] = None
+    director_id: Optional[int] = None
 
 class MovieUpdate(SQLModel):
     title: Optional[str] = None
@@ -30,5 +32,5 @@ class MovieUpdate(SQLModel):
     rating: Optional[float] = None
     is_oscar_winner: Optional[bool] = None
     description: Optional[str] = None
-    kolegica_id: Optional[int] = None
+    director_id: Optional[int] = None
     
