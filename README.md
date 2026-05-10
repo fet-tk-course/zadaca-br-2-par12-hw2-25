@@ -76,20 +76,26 @@ curl -X POST "http://localhost:8000/directors" \
 |--------|------|------|
 | GET | `/movies` | Vraća listu svih filmova. Podržava filtriranje po godini |
 | GET | `/movies/{id}` |Vraća detaljne informacije o  filmu na osnovu njegovog ID-a |
-| POST | `/resursi_a` | Kreira novi zapis o filmu |
+| POST | `/movies` | Kreira novi zapis o filmu |
 | PUT | `/movies/{id}` | Potpuna zamjena postojeceg filma |
 | PATCH | `/movies/{id}` | Djelimično ažuriranje filma |
 | DELETE | `/movies/{id}` | Brisanje filma |
 
+
+
+**Primjer zahtjeva:**
+```bash
+# Kreiranje novog resursa
 curl -X POST "http://localhost:8000/movies" \
   -H "Content-Type: application/json" \
   -d '{"title": "Inception", "year": 2010, "rating": 9, "is_oscar_winner": true, "description": "Film o snovima unutar snova."}'
-
-[Analogno kao za Resurs A]
+```
 
 ## Korištenje AI alata
 
 ### Alat: [GitHub Copilot / ChatGPT / ...]
+
+Student A:
 **Model:** [GPT-4, Copilot model, ...]
 
 **Primjer 1:**
@@ -97,10 +103,27 @@ curl -X POST "http://localhost:8000/movies" \
 - **Kako je pomoglo:** Claude je generisao dodatna polja (birth_year, awards, rating, active) sa odgovarajućim tipovima i automatski ažurirao sve tri klase (Director, DirectorCreate, DirectorUpdate).
 - **Prilagodbe:** Nisu bile potrebne značajne prilagodbe, kod je bio direktno upotrebljiv.
 
-**Primjer 2:**
-- **Prompt:** [Npr. "Implementiraj PATCH endpoint sa exclude_unset=True"]
-- **Kako je pomoglo:** [Opis]
-- **Prilagodbe:** [Opis]
+
+Student B:
+**Model:** [GPT-4.1, Copilot model, ...]
+
+**Primjer 1:**
+- **Prompt:** Ako zelim da povezem svoj resurs FIlm sa resursom reziser kako bih to mogla uraditi i koje promijene u kodu su potrebne za to ?
+- **Kako je pomoglo:** AI je objasnio da nije dovoljno samo dodati polje sa ID-em, već da se mora eksplicitno reći bazi podataka da to polje gleda u drugu tabelu. Ovo je spriječilo greške u bazi i omogućilo nam da kasnije povlačimo kompletne podatke o režiseru uz svaki film.
+- **Prilagodbe:** U models_b.py sam dodala:
+
+    director_id: Optional[int] = Field(default=None, foreign_key="director.id") – za fizičku vezu u bazi.
+
+    director: Optional[Director] = Relationship() – kako bi FastAPI/SQLModel mogao  učitati objekt režisera.
+
+    Također, morala sam dodati import kolegicine klase Director iz njenog fajla models_a.py.
+
+*Primjer 2:**
+- **Prompt:**# GET /movies/{id} - za dohvatanje filma preko njegovog ID-a ako film ne postoji vraca 404
+ - **Kako je pomoglo:** AI je trenutno generisao ispravnu strukturu rute.
+ - **Prilagodbe:** Iako je Copilot generisao osnovni kod, prilagodila sam poruku greške (detail) da bude na našem jeziku i jasnija korisniku.
+
+
 
 ## Napomene
 
