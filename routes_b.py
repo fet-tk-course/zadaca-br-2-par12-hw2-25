@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 from typing import List, Optional
 
+from models_a import Director
 from models_b import Movie, MovieCreate, MovieUpdate
 from database import get_session
 
@@ -28,6 +29,13 @@ def read_movie(id: int, session: Session = Depends(get_session)):
 #POST /movies - za kreiranje novog filma (Status 201)
 @router.post("/", response_model=Movie, status_code=201)
 def create_movie(movie: MovieCreate, session: Session = Depends(get_session)):
+    if movie.director_id is not None:
+        # Provjera da li direktor postoji
+        director = session.get(Director, movie.director_id)
+        if not director:
+            raise HTTPException(status_code=400, detail="Reziser sa datim ID-om ne postoji")
+
+
     new_movie = Movie.from_orm(movie)
     session.add(new_movie)
     session.commit()
@@ -42,6 +50,12 @@ def update_movie(id: int, movie_data: MovieCreate, session: Session = Depends(ge
     if not db_movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
     
+    if movie_data.director_id is not None:
+        # Provjera da li direktor postoji
+        director = session.get(Director, movie_data.director_id)
+        if not director:
+            raise HTTPException(status_code=400, detail="Reziser sa datim ID-om ne postoji")
+
     for key, value in movie_data.dict().items():
         setattr(db_movie, key, value)
     
@@ -57,6 +71,12 @@ def patch_movie(id: int, movie_update: MovieUpdate, session: Session = Depends(g
     movie = session.get(Movie, id)
     if not movie:
         raise HTTPException(status_code=404, detail="Film nije pronađen")
+    
+    if movie_update.director_id is not None:
+        # Provjera da li direktor postoji
+        director = session.get(Director, movie_update.director_id)
+        if not director:
+            raise HTTPException(status_code=400, detail="Reziser sa datim ID-om ne postoji")
     
     update_data = movie_update.dict(exclude_unset=True)
     for key, value in update_data.items():
