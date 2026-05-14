@@ -86,6 +86,20 @@ curl -X POST "http://localhost:8000/directors" \
 - **Kako je pomoglo:** [Opis]
 - **Prilagodbe:** [Opis]
 
-## Napomene
+## Opis zadataka sa odbrane zadace 
 
-[Dodatne napomene specifične za vašu implementaciju]
+- **zadatak 1a:** u ovom dijelu dodana je provjera u modelu DirectorCreate koja osigurava da polje name u klasi ne smije biti prazno i da nije sastavljeno od razmaka
+- **zadatak 1b:**  u ovom dijelu u metodi post dodana je provjera da koja vraca statusni kod 409 ako reziser sa odredenim imenom vec postoji.
+- **Zadatak 2:** Dodani endpoint je @router.get("/statistics) koji vraća prosječni rejting svih rezisera u bazi.
+```bash
+curl -X 'GET' \
+  'http://127.0.0.1:8000/directors/statistika/' \
+  -H 'accept: application/json'
+```
+
+**Očekivani odgovor:**
+```json
+{
+    "prosjek_ratinga": 8.77
+}
+```

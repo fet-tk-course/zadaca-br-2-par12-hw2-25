@@ -20,6 +20,15 @@ def get_directors(
     directors = session.exec(query).all()
     return directors
 
+#Dohvatanje statistike - prosječna ocjena svih režisera
+@router.get("/statistics")
+def get_statistics(session: Session = Depends(get_session)):
+    directors=session.get(Director).all()
+    if not directors:
+        return {"Prosjek rejtinga":0}
+    average_rating = sum(d.rating for d in directors)/len(directors)
+    return {"Prosjek rejtinga": average_rating}
+
 # Dohvatanje jednog režisera po ID-u
 @router.get("/{director_id}")
 def get_director(director_id: int, session: Session = Depends(get_session)):
@@ -31,7 +40,13 @@ def get_director(director_id: int, session: Session = Depends(get_session)):
 # Kreiranje novog režisera
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def create_director(director: DirectorCreate, session: Session = Depends(get_session)):
-    new_director = Director.model_validate(director)
+
+    existing=session.exec(select(Director).where(Director.name==director.name)).first()
+
+    if existing:
+        raise HTTPException(status_code=409 detail="Režiser sa ovim imenom već postoji")
+    
+    new_director = Director.model_validate(director)    
     session.add(new_director)
     session.commit()
     session.refresh(new_director)

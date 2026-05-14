@@ -1,5 +1,7 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
+from pydantic import field_validator
+
 
 # TODO: Student A - Definiši svoj SQLModel entitet ovdje
 
@@ -19,6 +21,13 @@ class DirectorCreate(SQLModel):
     awards: int
     active: bool
     rating: float
+
+    @field_validator('name')
+    @classmethod
+    def validate_name(cls, value):
+        if not value.strip():
+            raise ValueError('Ime ne smije biti prazno')
+        return value.strip()
 
 class DirectorUpdate(SQLModel):
     name: Optional[str] = None
