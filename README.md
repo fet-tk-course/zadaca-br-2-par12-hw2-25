@@ -73,6 +73,7 @@ curl -X POST "http://localhost:8000/resursi_a" \
 | Metoda | Ruta | Opis |
 |--------|------|------|
 | GET | `/movies` | Vraća listu svih filmova. Podržava filtriranje po godini |
+|GET | '/movies'| Vraca koliko filmova ima projsek iznad specificirane vrijendosti|
 | GET | `/movies/{id}` |Vraća detaljne informacije o  filmu na osnovu njegovog ID-a |
 | POST | `/resursi_a` | Kreira novi zapis o filmu |
 | PUT | `/movies/{id}` | Potpuna zamjena postojeceg filma |
@@ -103,3 +104,17 @@ curl -X POST "http://localhost:8000/movies" \
 ## Napomene
 
 [Dodatne napomene specifične za vašu implementaciju]
+
+Dodatak za odbranu zadace:
+U Z1 su dodani validatori koji provjeravaju da li je naziv filma ('title') prazan,  u slucaju da je naziv filma prazan vraca se error "Naziv ne smije biti prazan", naredni validator provjerava da li je godina izlaska filma ('year') pozitivna, ukoliko nije vraca error "Godina mora biti pozitivna". Dati validaori su implementirani za resurs '/movies'. 
+
+U Z1 pod b provjeraju se duplikati u ruti POST odnosno da li postoji vec resurs sa istim nazivom ('title'). Ukoliko postoji vraca se HTTP status kod 409 sa porukom "Film sa datim nazivom vec postoji".
+
+Z2:Primjer zahtjeva za novi get endpoint:
+U Z2 dodan je novi endpoint get koji racuna statistiku filmova sa specificnim ratingom.
+Za dati endpoint potrebno je poslati rating za koji trazi statistiku filmova, kao rezultat dobiva se ukupan broj filmova sa datim ratingom.
+
+
+
+
+

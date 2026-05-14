@@ -1,6 +1,8 @@
 from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 from models_a import KolegicaModel
+from pydantic import field_validator
+
 
 # TODO: Student B - Definiši svoj SQLModel entitet ovdje
 # 
@@ -23,6 +25,20 @@ class MovieCreate(SQLModel):
     is_oscar_winner: bool
     description: Optional[str] = None
     kolegica_id: Optional[int] = None
+
+@field_validator('title')
+@classmethod
+def naziv_ne_smije_biti_prazan(cls, v):
+   if not v.strip():
+     raise ValueError('Naziv ne smije biti prazan string')
+   return v.strip() 
+
+@field_validator('year)
+@classmethod
+def godina_mora_biti_pozitivna(cls, v):
+     if v <= 0:
+       raiseValueError('Godina mora biti pozitivna')
+     return v
 
 class MovieUpdate(SQLModel):
     title: Optional[str] = None
