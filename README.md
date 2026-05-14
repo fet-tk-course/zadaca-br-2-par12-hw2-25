@@ -100,6 +100,6 @@ curl -X 'GET' \
 **Očekivani odgovor:**
 ```json
 {
-    "prosjek_ratinga": 8.77
+    "Prosjek_rejtinga": 8.77
 }
 ```
